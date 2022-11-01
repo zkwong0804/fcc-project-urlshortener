@@ -30,22 +30,24 @@ app.get('/api/hello', function (req, res) {
 let shortUrls = [];
 function addShortUrl(req, res) {
   const error = 'invalid url';
-  const url = req.body.url;
-  console.log(`Add short url: ${url}`);
-  const processedUrl = removeProtocol(url);
-  if (!processedUrl) {
-    res.json({ error });
+  const rawUrl = req.body.url;
+  console.log(`Add short url: ${rawUrl}`);
+  let url = null;
+  try {
+    url = new URL(rawUrl);
+  } catch(err) {
+    res.json({error});
     return;
   }
   const options = {
     hints: dns.ADDRCONFIG | dns.V4MAPPED
   }
-  dns.lookup(processedUrl, (err, options, addresses) => {
+  dns.lookup(url.hostname, (err, options, addresses) => {
     if (err) {
       res.json({ error });
     } else {
       const index = shortUrls.length;
-      shortUrls.push(url);
+      shortUrls.push(url.toString());
       res.json({
         original_url: shortUrls[index],
         short_url: index
@@ -70,16 +72,6 @@ function browseShortUrl(req, res) {
 
   const redirectUrl = shortUrls[shortUrl];
   res.redirect(redirectUrl);
-}
-
-function getShortUrlIndex(string) {
-  return shortUrls.indexOf(string);
-}
-
-function removeProtocol(url) {
-  const startIndex = url.indexOf('://');
-  if (startIndex == -1) return null;
-  return url.substring(startIndex + 3);
 }
 
 app.post('/api/shorturl', addShortUrl);
