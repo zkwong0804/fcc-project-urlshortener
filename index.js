@@ -83,7 +83,7 @@ function removeProtocol(url) {
 }
 
 app.post('/api/shorturl', addShortUrl);
-app.get('/api/shorturl/:shortUrl', browseShortUrl);
+app.get('/api/shorturl/:shortUrl?', browseShortUrl);
 
 
 
