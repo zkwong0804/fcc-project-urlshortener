@@ -31,7 +31,7 @@ let shortUrls = [];
 function addShortUrl(req, res) {
   const error = 'invalid url';
   const url = req.body.url;
-  console.log(req.body);
+  console.log(`Add short url: ${url}`);
   const processedUrl = removeProtocol(url);
   if (!processedUrl) {
     res.json({ error });
@@ -57,6 +57,7 @@ function addShortUrl(req, res) {
 function browseShortUrl(req, res) {
   const error = 'No short URL found for the given input';
   const shortUrl = req.params.shortUrl;
+  console.log(`Browse short URL: ${shortUrl}`);
 
   if (isNaN(Number(shortUrl))) { /*if shortUrl is not number*/
     res.json({ error });
