@@ -36,6 +36,7 @@ function addShortUrl(req, res) {
   try {
     url = new URL(rawUrl);
   } catch(err) {
+    console.error(`Unable to convert raw url: ${rawUrl} to URL object`);
     res.json({error});
     return;
   }
@@ -44,6 +45,7 @@ function addShortUrl(req, res) {
   }
   dns.lookup(url.hostname, (err, options, addresses) => {
     if (err) {
+      console.error(`DNS lookup failed with url: ${url.hostname}`);
       res.json({ error });
     } else {
       const index = shortUrls.length;
